@@ -2,11 +2,10 @@ import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
+const lightbox = new SimpleLightbox('.gallery a');
 
 export function renderGallery(images) {
   const gallery = document.querySelector('.gallery');
-  
-
   gallery.innerHTML = ''; 
 
   if (images.length === 0) {
