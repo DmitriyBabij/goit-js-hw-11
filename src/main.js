@@ -1,5 +1,3 @@
-import { fetchImages } from './js/pixabay-api.js';
-import { renderGallery, showNoResultsMessage, showLoadingIndicator, hideLoadingIndicator } from './js/render-functions.js';
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.querySelector('.search-form');
   const searchInput = document.querySelector('.search-input');
@@ -20,10 +18,13 @@ document.addEventListener('DOMContentLoaded', () => {
     showLoadingIndicator();
 
     try {
+      console.log('Fetching images for query:', query); // Логування запиту
       const images = await fetchImages(query);
+      console.log('Images fetched:', images); // Логування отриманих зображень
       renderGallery(images);
     } catch (error) {
-      showNoResultsMessage();
+      console.error('Error during fetch:', error); // Логування помилки
+      showNoResultsMessage(); // Показуємо повідомлення, якщо немає зображень
     } finally {
       hideLoadingIndicator();
     }
