@@ -2,14 +2,14 @@ import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
+
 const lightbox = new SimpleLightbox('.gallery a');
 
 export function renderGallery(images) {
   const gallery = document.querySelector('.gallery');
-  gallery.innerHTML = ''; 
+  gallery.innerHTML = '';
 
   if (images.length === 0) {
-  
     showNoResultsMessage();
     return;
   }
@@ -29,28 +29,19 @@ export function renderGallery(images) {
       `;
     })
     .join('');
-  
-  gallery.insertAdjacentHTML('beforeend', markup);
 
+  console.log('Rendering gallery with markup:', markup);
+
+  gallery.insertAdjacentHTML('beforeend', markup);
   lightbox.refresh();
 }
 
 export function showNoResultsMessage() {
   const gallery = document.querySelector('.gallery');
-  gallery.innerHTML = '';
+  gallery.innerHTML = ''; 
 
   iziToast.error({
     title: 'Sorry',
     message: 'There are no images matching your search query. Please try again!',
   });
-}
-
-export function showLoadingIndicator() {
-  const loader = document.querySelector('.loader');
-  loader.classList.remove('hidden');
-}
-
-export function hideLoadingIndicator() {
-  const loader = document.querySelector('.loader');
-  loader.classList.add('hidden');
 }
