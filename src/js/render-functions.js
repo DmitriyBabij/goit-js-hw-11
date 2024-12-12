@@ -1,47 +1,96 @@
-import iziToast from 'izitoast';
-import 'izitoast/dist/css/iziToast.min.css';
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
-const lightbox = new SimpleLightbox('.gallery a');
-export function renderGallery(images) {
-  const gallery = document.querySelector('.gallery');
-  gallery.innerHTML = '';
+import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
+import iziToast from "izitoast";
+import "izitoast/dist/css/iziToast.min.css";
 
-  const markup = images
-    .map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => {
-      return `
-        <a href="${largeImageURL}" class="gallery-item">
-          <img src="${webformatURL}" alt="${tags}" />
-          <div class="info">
-            <p class="info-item"><b>Likes:</b> ${likes}</p>
-            <p class="info-item"><b>Views:</b> ${views}</p>
-            <p class="info-item"><b>Comments:</b> ${comments}</p>
-            <p class="info-item"><b>Downloads:</b> ${downloads}</p>
-          </div>
-        </a>
-      `;
-    })
-    .join('');
-  
-  gallery.insertAdjacentHTML('beforeend', markup);
+const gallery = document.createElement("div");
+gallery.classList.add("gallery");
+document.body.appendChild(gallery);
 
-  
-  lightbox.refresh();
+const loader = document.createElement("div");
+loader.classList.add("loader");
+loader.style.display = "none";
+loader.innerHTML = '<div class="css-loader"></div>';
+document.body.appendChild(loader);
+
+const form = document.createElement("form");
+form.id = "search-form";
+form.innerHTML = `
+  <input type="text" id="search-input" placeholder="Search images...">
+  <button type="submit">Search</button>
+`;
+document.body.prepend(form);
+
+const lightbox = new SimpleLightbox(".gallery a");
+
+export function clearGallery() {
+  gallery.innerHTML = "";
 }
 
-export function showNoResultsMessage() {
-  iziToast.error({
-    title: 'Sorry',
-    message: 'There are no images matching your search query. Please try again!',
+export function showLoader() {
+  loader.style.display = "block";
+}
+
+export function hideLoader() {
+  loader.style.display = "none";
+}
+
+export function showLoadingToast() {
+  iziToast.info({
+    id: "loading-toast",
+    title: "Loading",
+    message: "Fetching images, please wait...",
+    timeout: false, // Сповіщення не зникає автоматично
+    close: false, // Забороняємо користувачу вручну закривати сповіщення
+    position: "topRight",
   });
 }
 
-export function showLoadingIndicator() {
-  const loader = document.querySelector('.loader');
-  loader.classList.remove('hidden');
+export function hideLoadingToast() {
+  iziToast.hide({}, document.querySelector(".iziToast#loading-toast"));
 }
 
-export function hideLoadingIndicator() {
-  const loader = document.querySelector('.loader');
-  loader.classList.add('hidden');
+
+/**
+ * @param {Array} images
+ */
+export function renderGallery(images) {
+  const markup = images
+    .map(
+      ({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) =>
+        `
+        <a href="${largeImageURL}">
+          <img src="${webformatURL}" alt="${tags}">
+          <div>
+            <p>Likes: ${likes}</p>
+            <p>Views: ${views}</p>
+            <p>Comments: ${comments}</p>
+            <p>Downloads: ${downloads}</p>
+          </div>
+        </a>
+      `
+    )
+    .join("");
+  gallery.insertAdjacentHTML("beforeend", markup);
+  lightbox.refresh();
+}
+
+/**
+ * @param {string} message
+ */
+export function showError(message) {
+  iziToast.error({
+    title: "Error",
+    message: message,
+  });
+}
+
+/**
+ * @param {string} message
+ */
+export function showWarning(message) {
+  iziToast.warning({
+    title: "No Results",
+    message: message,
+  });
 }
