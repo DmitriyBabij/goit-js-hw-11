@@ -5,15 +5,16 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 
 export function renderGallery(images) {
   const gallery = document.querySelector('.gallery');
-  gallery.innerHTML = ''; // Очищаємо галерею перед додаванням нових зображень
+  
+
+  gallery.innerHTML = ''; 
 
   if (images.length === 0) {
-    // Якщо зображень немає, показуємо повідомлення про відсутність результатів
+  
     showNoResultsMessage();
     return;
   }
 
-  // Генерація та додавання нових зображень в галерею
   const markup = images
     .map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => {
       return `
@@ -31,13 +32,13 @@ export function renderGallery(images) {
     .join('');
   
   gallery.insertAdjacentHTML('beforeend', markup);
-  
-  lightbox.refresh(); // Оновлюємо лайтбокс після завантаження нових зображень
+
+  lightbox.refresh();
 }
 
 export function showNoResultsMessage() {
   const gallery = document.querySelector('.gallery');
-  gallery.innerHTML = ''; // Очищаємо галерею перед відображенням повідомлення
+  gallery.innerHTML = '';
 
   iziToast.error({
     title: 'Sorry',
