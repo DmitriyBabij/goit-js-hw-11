@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const images = await fetchImages(query);
       renderGallery(images);
     } catch (error) {
-      showNoResultsMessage(); 
+      showNoResultsMessage();
     } finally {
       hideLoadingIndicator();
     }
