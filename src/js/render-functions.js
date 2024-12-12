@@ -1,96 +1,45 @@
-import SimpleLightbox from "simplelightbox";
-import "simplelightbox/dist/simple-lightbox.min.css";
-import iziToast from "izitoast";
-import "izitoast/dist/css/iziToast.min.css";
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
-const gallery = document.createElement("div");
-gallery.classList.add("gallery");
-document.body.appendChild(gallery);
-
-const loader = document.createElement("div");
-loader.classList.add("loader");
-loader.style.display = "none";
-loader.innerHTML = '<div class="css-loader"></div>';
-document.body.appendChild(loader);
-
-const form = document.createElement("form");
-form.id = "search-form";
-form.innerHTML = `
-  <input type="text" id="search-input" placeholder="Search images...">
-  <button type="submit">Search</button>
-`;
-document.body.prepend(form);
-
-const lightbox = new SimpleLightbox(".gallery a");
-
-export function clearGallery() {
-  gallery.innerHTML = "";
-}
-
-export function showLoader() {
-  loader.style.display = "block";
-}
-
-export function hideLoader() {
-  loader.style.display = "none";
-}
-
-export function showLoadingToast() {
-  iziToast.info({
-    id: "loading-toast",
-    title: "Loading",
-    message: "Fetching images, please wait...",
-    timeout: false, // Сповіщення не зникає автоматично
-    close: false, // Забороняємо користувачу вручну закривати сповіщення
-    position: "topRight",
-  });
-}
-
-export function hideLoadingToast() {
-  iziToast.hide({}, document.querySelector(".iziToast#loading-toast"));
-}
-
+let lightbox;
 
 /**
- * @param {Array} images
+ * Створює розмітку для галереї.
+ * @param {Array} images - список об'єктів із зображеннями.
+ * @returns {string} - HTML-розмітка.
  */
-export function renderGallery(images) {
-  const markup = images
+export const createGalleryMarkup = (images) => {
+  return images
     .map(
-      ({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) =>
-        `
-        <a href="${largeImageURL}">
-          <img src="${webformatURL}" alt="${tags}">
-          <div>
-            <p>Likes: ${likes}</p>
-            <p>Views: ${views}</p>
-            <p>Comments: ${comments}</p>
-            <p>Downloads: ${downloads}</p>
-          </div>
-        </a>
-      `
+      (img) => `
+    <li class="li">
+      <a href="${img.largeImageURL}">
+        <img src="${img.webformatURL}" alt="${img.tags}" />
+      </a>
+      <div class="div">
+        <p class="p">Likes: ${img.likes}</p>
+        <p class="p">Views: ${img.views}</p>
+        <p class="p">Comments: ${img.comments}</p>
+        <p class="p">Downloads: ${img.downloads}</p>
+      </div>
+    </li>
+  `
     )
-    .join("");
-  gallery.insertAdjacentHTML("beforeend", markup);
-  lightbox.refresh();
-}
+    .join('');
+};
 
 /**
- * @param {string} message
+ * Очищує галерею та додає нові зображення.
+ * @param {HTMLElement} galleryElement - елемент галереї.
+ * @param {Array} images - список зображень для рендерингу.
  */
-export function showError(message) {
-  iziToast.error({
-    title: "Error",
-    message: message,
-  });
-}
+export const renderGallery = (galleryElement, images) => {
+  const markup = createGalleryMarkup(images);
+  galleryElement.innerHTML = markup;
 
-/**
- * @param {string} message
- */
-export function showWarning(message) {
-  iziToast.warning({
-    title: "No Results",
-    message: message,
-  });
-}
+  if (!lightbox) {
+    lightbox = new SimpleLightbox('.gallery a');
+  } else {
+    lightbox.refresh();
+  }
+};
