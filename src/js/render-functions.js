@@ -2,11 +2,14 @@ import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
-const lightbox = new SimpleLightbox('.gallery a');
+
 export function renderGallery(images) {
   const gallery = document.querySelector('.gallery');
   gallery.innerHTML = '';
-
+  if (images.length === 0) {
+    showNoResultsMessage(); // Відображаємо повідомлення, якщо не знайдено зображень
+    return;
+  }
   const markup = images
     .map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => {
       return `
@@ -24,7 +27,7 @@ export function renderGallery(images) {
     .join('');
   
   gallery.insertAdjacentHTML('beforeend', markup);
-
+  const lightbox = new SimpleLightbox('.gallery a');
   
   lightbox.refresh();
 }
