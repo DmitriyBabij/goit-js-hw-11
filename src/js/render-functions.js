@@ -1,47 +1,46 @@
 import iziToast from 'izitoast';
-import 'izitoast/dist/css/iziToast.min.css';
 import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
-const lightbox = new SimpleLightbox('.gallery a');
-export function renderGallery(images) {
+
+// Функція для очищення галереї
+export const clearGallery = () => {
   const gallery = document.querySelector('.gallery');
-  gallery.innerHTML = '';
+  gallery.innerHTML = ''; // Очищаємо попередні результати
+};
 
-  const markup = images
-    .map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => {
-      return `
-        <a href="${largeImageURL}" class="gallery-item">
-          <img src="${webformatURL}" alt="${tags}" />
-          <div class="info">
-            <p class="info-item"><b>Likes:</b> ${likes}</p>
-            <p class="info-item"><b>Views:</b> ${views}</p>
-            <p class="info-item"><b>Comments:</b> ${comments}</p>
-            <p class="info-item"><b>Downloads:</b> ${downloads}</p>
-          </div>
-        </a>
-      `;
-    })
-    .join('');
+// Функція для відображення карток зображень
+export const renderImages = (images) => {
+  const gallery = document.querySelector('.gallery');
   
-  gallery.insertAdjacentHTML('beforeend', markup);
+  images.forEach(image => {
+    const { webformatURL, largeImageURL, tags, likes, views, comments, downloads } = image;
 
-  
-  lightbox.refresh();
-}
-
-export function showNoResultsMessage() {
-  iziToast.error({
-    title: 'Sorry',
-    message: 'There are no images matching your search query. Please try again!',
+    const imageCard = document.createElement('div');
+    imageCard.classList.add('gallery-item');
+    
+    imageCard.innerHTML = `
+      <a href="${largeImageURL}">
+        <img src="${webformatURL}" alt="${tags}" />
+      </a>
+      <div class="info">
+        <p><strong>Likes:</strong> ${likes}</p>
+        <p><strong>Views:</strong> ${views}</p>
+        <p><strong>Comments:</strong> ${comments}</p>
+        <p><strong>Downloads:</strong> ${downloads}</p>
+      </div>
+    `;
+    
+    gallery.appendChild(imageCard);
   });
-}
 
-export function showLoadingIndicator() {
-  const loader = document.querySelector('.loader');
-  loader.classList.remove('hidden');
-}
+  // Оновлюємо SimpleLightbox для нових зображень
+  const lightbox = new SimpleLightbox('.gallery a');
+  lightbox.refresh();
+};
 
-export function hideLoadingIndicator() {
-  const loader = document.querySelector('.loader');
-  loader.classList.add('hidden');
-}
+// Функція для показу повідомлення про відсутність зображень
+export const showNoResultsMessage = () => {
+  iziToast.error({
+    title: 'Error',
+    message: 'Sorry, there are no images matching your search query. Please try again!',
+  });
+};

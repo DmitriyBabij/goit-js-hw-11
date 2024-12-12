@@ -1,31 +1,55 @@
 import { fetchImages } from './js/pixabay-api.js';
-import { renderGallery, showNoResultsMessage, showLoadingIndicator, hideLoadingIndicator } from './js/render-functions.js';
-document.addEventListener('DOMContentLoaded', () => {
-  const form = document.querySelector('.search-form');
-  const searchInput = document.querySelector('.search-input');
-  
-  form.addEventListener('submit', async (event) => {
-    event.preventDefault();
+import { clearGallery, renderImages, showNoResultsMessage } from './js/render-functions.js';
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
-    const query = searchInput.value.trim();
+// Знаходимо елементи
+const form = document.querySelector('#search-form');
+const searchInput = document.querySelector('#search-input');
+const loader = document.querySelector('.loader'); // Індикатор завантаження
 
-    if (query === '') {
-      iziToast.warning({
-        title: 'Warning',
-        message: 'Please enter a search term.',
-      });
-      return;
-    }
+// Функція для відправлення запиту
+const handleFormSubmit = async (event) => {
+  event.preventDefault();
 
-    showLoadingIndicator();
+  const searchQuery = searchInput.value.trim();
 
-    try {
-      const images = await fetchImages(query);
-      renderGallery(images);
-    } catch (error) {
+  // Перевірка на порожній запит
+  if (!searchQuery) {
+    iziToast.error({
+      title: 'Error',
+      message: 'Please enter a search query!',
+    });
+    return;
+  }
+
+  // Показуємо індикатор завантаження
+  loader.style.display = 'block';
+
+  // Очищаємо галерею перед новим пошуком (це має бути зроблено перед запитом)
+  clearGallery();
+
+  try {
+    // Отримуємо зображення
+    const images = await fetchImages(searchQuery);
+
+    // Якщо зображення є, рендеримо їх
+    if (images.length > 0) {
+      renderImages(images);
+    } else {
       showNoResultsMessage();
-    } finally {
-      hideLoadingIndicator();
     }
-  });
-});
+  } catch (error) {
+    iziToast.error({
+      title: 'Error',
+      message: 'Something went wrong. Please try again later!',
+    });
+  } finally {
+    // Сховуємо індикатор завантаження
+    loader.style.display = 'none';
+  }
+};
+
+// Додаємо обробник події на форму
+form.addEventListener('submit', handleFormSubmit);
