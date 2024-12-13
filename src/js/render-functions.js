@@ -6,12 +6,10 @@ const lightbox = new SimpleLightbox('.gallery a');
 
 export function renderGallery(images) {
   const gallery = document.querySelector('.gallery');
-  
-  // Очищаємо галерею перед додаванням нових зображень
-  gallery.innerHTML = '';
+  gallery.innerHTML = ''; // Очищення галереї перед рендерингом нових зображень
 
+  // Якщо немає зображень, покажемо повідомлення про помилку
   if (images.length === 0) {
-    // Якщо зображення не знайдені, показуємо повідомлення і не додаємо елементи в галерею
     showNoResultsMessage();
     return;
   }
@@ -32,14 +30,16 @@ export function renderGallery(images) {
     })
     .join('');
   
-  // Вставляємо нові зображення в галерею
   gallery.insertAdjacentHTML('beforeend', markup);
 
-  // Оновлюємо lightbox після оновлення галереї
+  // Оновлюємо бібліотеку SimpleLightbox після додавання нових елементів
   lightbox.refresh();
 }
 
 export function showNoResultsMessage() {
+  const gallery = document.querySelector('.gallery');
+  gallery.innerHTML = ''; // Очищаємо галерею, якщо не знайдено результатів
+
   iziToast.error({
     title: 'Sorry',
     message: 'There are no images matching your search query. Please try again!',

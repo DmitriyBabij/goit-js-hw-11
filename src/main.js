@@ -1,5 +1,6 @@
 import { fetchImages } from './js/pixabay-api.js';
 import { renderGallery, showNoResultsMessage, showLoadingIndicator, hideLoadingIndicator } from './js/render-functions.js';
+
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.querySelector('.search-form');
   const searchInput = document.querySelector('.search-input');
@@ -23,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const images = await fetchImages(query);
       renderGallery(images);
     } catch (error) {
-      showNoResultsMessage();
+      showNoResultsMessage(); // Відображаємо повідомлення про відсутність результатів
     } finally {
       hideLoadingIndicator();
     }
