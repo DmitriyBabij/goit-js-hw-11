@@ -6,13 +6,13 @@ export function fetchImages(query) {
 
   return fetch(url)
     .then(response => {
-      if (!response.ok) {  // Перевірка на успішний статус відповіді (200)
+      if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-      return response.json();  // Якщо статус успішний, парсимо JSON
+      return response.json();
     })
     .catch(error => {
       console.error('Error fetching images:', error);
-      throw error;  // Прокидаємо помилку
+      throw error;
     });
 }
