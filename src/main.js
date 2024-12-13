@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const images = await fetchImages(query);
       renderGallery(images);
     } catch (error) {
-      showNoResultsMessage(); // Відображаємо повідомлення про відсутність результатів
+      showNoResultsMessage();
     } finally {
       hideLoadingIndicator();
     }

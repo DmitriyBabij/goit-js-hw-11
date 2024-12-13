@@ -6,9 +6,8 @@ const lightbox = new SimpleLightbox('.gallery a');
 
 export function renderGallery(images) {
   const gallery = document.querySelector('.gallery');
-  gallery.innerHTML = ''; // Очищення галереї перед рендерингом нових зображень
+  gallery.innerHTML = ''; 
 
-  // Якщо немає зображень, покажемо повідомлення про помилку
   if (images.length === 0) {
     showNoResultsMessage();
     return;
@@ -32,13 +31,13 @@ export function renderGallery(images) {
   
   gallery.insertAdjacentHTML('beforeend', markup);
 
-  // Оновлюємо бібліотеку SimpleLightbox після додавання нових елементів
+  
   lightbox.refresh();
 }
 
 export function showNoResultsMessage() {
   const gallery = document.querySelector('.gallery');
-  gallery.innerHTML = ''; // Очищаємо галерею, якщо не знайдено результатів
+  gallery.innerHTML = '';
 
   iziToast.error({
     title: 'Sorry',
