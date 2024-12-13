@@ -5,10 +5,14 @@ export function fetchImages(query) {
   const url = `${BASE_URL}?key=${API_KEY}&q=${query}&image_type=photo&orientation=horizontal&safesearch=true`;
 
   return fetch(url)
-    .then(response => response.json())
-    
+    .then(response => {
+      if (!response.ok) {  // Перевірка на успішний статус відповіді (200)
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();  // Якщо статус успішний, парсимо JSON
+    })
     .catch(error => {
       console.error('Error fetching images:', error);
-      throw error;
+      throw error;  // Прокидаємо помилку
     });
 }

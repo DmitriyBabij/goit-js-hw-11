@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const query = searchInput.value.trim();
 
+    // Перевірка, чи введено запит
     if (query === '') {
       iziToast.warning({
         title: 'Warning',
@@ -18,15 +19,26 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    showLoadingIndicator();
+    // Очищаємо старі результати перед новим пошуком
+    const gallery = document.querySelector('.gallery');
+    gallery.innerHTML = '';  // Очищаємо галерею
+
+    showLoadingIndicator();  // Показуємо індикатор завантаження
 
     try {
-      const images = await fetchImages(query);
-      renderGallery(images);
+      const data = await fetchImages(query);  // Отримуємо дані з API
+
+      // Перевірка на наявність зображень
+      if (data.hits.length === 0) {
+        showNoResultsMessage();  // Якщо зображень немає, показуємо повідомлення
+        return;
+      }
+
+      renderGallery(data.hits);  // Якщо зображення є, рендеримо їх
     } catch (error) {
-      showNoResultsMessage();
+      showNoResultsMessage();  // Показуємо повідомлення про помилку
     } finally {
-      hideLoadingIndicator();
+      hideLoadingIndicator();  // Сховуємо індикатор завантаження
     }
   });
 });
